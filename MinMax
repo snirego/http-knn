@@ -1,0 +1,4 @@
+-------------------------
+FUNCTION > RETURN VALUE
+-------------------------
+f(Board, Who's turn now) > number
