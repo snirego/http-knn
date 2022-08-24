@@ -1,6 +1,6 @@
 from flask import Flask
 import random
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
