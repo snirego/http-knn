@@ -1,19 +1,19 @@
-from flask import Flask
+from flask import Flask, render_template
 import random
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Hello World!"
+    return render_template("index.html")
 
-@app.route("/user/<user>")
-def user(user):
-    return "<h1>Hello, {}!<h1/>".format(user)
+# @app.route("/user/<user>")
+# def user(user):
+#     return "<h1>Hello, {}!<h1/>".format(user)
 
-@app.route("/random")
-def rand():
-    return "<h1>{}<h1/>".format(random.randint(1,100))
+# @app.route("/signup")
+# def rand():
+#     return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(host="10.0.1.83")
