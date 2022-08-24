@@ -8,13 +8,13 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-# @app.route("/user/<user>")
-# def user(user):
-#     return "<h1>Hello, {}!<h1/>".format(user)
+@app.route('/signup')
+def signup():
+    return render_template('sign_up.html')  # render a template
 
-@app.route('/welcome')
-def welcome():
-    return render_template('welcome.html')  # render a template
+@app.route('/signin')
+def signin():
+    return render_template('sign_in.html')  # render a template
 
 
 if __name__ == "__main__":
