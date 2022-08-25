@@ -34,18 +34,19 @@ def pred(prediction=None):
 
 @app.route('/signup', methods = ['GET','POST'])
 def signup():
-
+    print(request.form)
     try:
-        with open('users.json', "w") as file:
+        with open('users.json', "r") as file:
             dictionary = json.load(file)
             print(dictionary)
     except:
         print("File not found in signup")
     return render_template('signup.html')
 
+
 @app.route('/signin', methods=['GET','POST'])
 def signin():
-
+    print(request.form)
     try:
         with open('users.json', "r") as file:
             dictionary = json.load(file)
