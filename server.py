@@ -24,29 +24,25 @@ def draw():
 def pred(prediction=None):
     return render_template("pred.html", pred=prediction)
 
-# @app.route('/signup')
-# def signup():
-#     return render_template('signup.html')  # render a template
-
-# @app.route('/signin')
-# def signin():
-#     return render_template('signin.html')  # render a template
-
-@app.route('/signup', methods = ['GET','POST'])
+@app.route('/form_signup', methods = ['GET','POST'])
 def signup():
-    print(request.form)
     try:
-        with open('users.json', "r") as file:
+        with open("users.json", "r") as file:
             dictionary = json.load(file)
-            print(dictionary)
+            if request.method == 'POST':  
+                username = request.form["username"]
+                password = request.form["password"]
+                dictionary[username]= password
+                with open("users.json", "w") as write_file:
+                    json.dump(dictionary, write_file, indent=4)
+                return render_template("draw.html")
     except:
         print("File not found in signup")
     return render_template('signup.html')
 
 
-@app.route('/signin', methods=['GET','POST'])
+@app.route('/form_sigin', methods=['GET','POST'])
 def signin():
-    print(request.form)
     try:
         with open('users.json', "r") as file:
             dictionary = json.load(file)
@@ -57,8 +53,7 @@ def signin():
                 for key,value in dictionary.items():
                     if key == username and value == password:
                         return render_template("draw.html")
-                    else:
-                        return render_template("signup.html")
+                return render_template("signinerror.html")
     except:
         print("File not found in signin")
     return render_template('signin.html')
@@ -80,7 +75,7 @@ def output():
     # Dealing with the image
     image = cv2.imread('decoded_image.png')
 
-    # Invert the image colors so it will be similar to the sklearn.load_digits dataset
+    # Invert the image colors so it will be similar to the dataset
     invert = cv2.bitwise_not(image)
     invert_two = cv2.bitwise_not(invert)
     cv2.imwrite('inverted_image.png', invert_two)
@@ -95,7 +90,7 @@ def output():
     cv2.imwrite('resized_image.png', resized)
 
 
-# region Old code
+# region Old code - sklearn.load_digits dataset
     # # Start KNN Prediction
     # knn = KNN(3)
 
@@ -152,13 +147,23 @@ def output():
     # ----------------------------------------------------------------------------
 
 
-
-
-
     # return render_template('pred.html', pred=knn.predict(resized.reshape(1, -1)))
     return '<h1> Prediction Header </h1>'
 
 
 if __name__ == "__main__":
     # app.run(host="10.0.1.83")
-    app.run(host="127.0.0.1")
+    import socket
+    def extract_ip():
+        st = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:       
+            st.connect(('10.255.255.255', 1))
+            IP = st.getsockname()[0]
+        except Exception:
+            IP = '127.0.0.1'
+        finally:
+            st.close()
+        return IP
+    print(extract_ip())
+    # app.run(host="127.0.0.1")
+    app.run(host=f"{extract_ip()}")
