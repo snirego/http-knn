@@ -1,8 +1,28 @@
 <html>
+    <head>
+        <title>Draw</title>
+        <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+        />
+        <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet"
+        />
+        <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1"
+        />
+        <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        </style>
+    </head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
 
-
+        
     var canvas, ctx, flag = false,
         prevX = 0,
         currX = 0,
@@ -10,7 +30,8 @@
         currY = 0,
         dot_flag = false;
 
-    var x = "black",
+
+    var x = "white",
         y = 20;
     
     function init() {
@@ -18,7 +39,9 @@
         ctx = canvas.getContext("2d");
         w = canvas.width;
         h = canvas.height;
-    
+        
+        canvas.style.backgroundColor = "#000000";
+
         canvas.addEventListener("mousemove", function (e) {
             findxy('move', e)
         }, false);
@@ -57,8 +80,8 @@
                 x = "white";
                 break;
         }
-        if (x == "white") y = 14;
-        else y = 2;
+        // if (x == "white") y = 14;
+        // else y = 2;
     
     }
     
@@ -73,11 +96,14 @@
     }
     
     function erase() {
-        var m = confirm("Want to clear");
-        if (m) {
-            ctx.clearRect(0, 0, w, h);
-            document.getElementById("canvasimg").style.display = "none";
-        }
+        // var m = confirm("Want to clear");
+        // if (m) {
+        //     ctx.clearRect(0, 0, w, h);
+        //     document.getElementById("canvasimg").style.display = "none";
+        // }
+
+        ctx.clearRect(0, 0, w, h);
+        document.getElementById("canvasimg").style.display = "none";
     }
     
     function save() {
@@ -89,10 +115,7 @@
         const img = document.getElementById("canvasimg").src
         console.log(img)
 
-        var postData = {
-        img_base64: img
-      
-        }
+        var postData = { img_base64: img }
 
     
         $.ajax({
@@ -101,7 +124,9 @@
         contentType: "application/json",
         data: JSON.stringify(postData),
         success: function(data){/* do something */}
-});
+        });
+
+        erase();
 
     }
     
@@ -136,14 +161,26 @@
         }
     }
     </script>
-    <body onload="init()">
-        <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-        <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
-        <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;" id="black" onclick="color(this)"></div>
-        <div style="position:absolute;top:20%;left:43%;">Eraser</div>
-        <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div>
-        <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
-        <input type="button" value="save" id="btn" size="50" onclick="save()" style="position:absolute;top:65%;left:10%; margin-left: 125px; font-size: 16; padding: 10px; background-color: white; outline-width: 10px; outline-color: #4CAF50; color: black; font-weight: 400;">
-        <input type="button" value="clear" id="clr" size="50" onclick="erase()" style="position:absolute;top:65%;left:15%; margin-left: 125px; font-size: 16; padding: 10px; background-color: white; color: black; outline-width: 10px; outline-color: #4CAF50;  font-weight: 400;">
+    <body onload="init()" class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+        <div class="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+
+            <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>            
+            
+            <!-- <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
+            <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:white;" id="white" onclick="color(this)"></div>
+            
+            <div style="position:absolute;top:20%;left:43%;">Eraser</div>
+            <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div> -->
+            
+            <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
+            <input class="text-2xl font-extrabold" type="button" value="save" id="btn" size="50" onclick="save()" style="position:absolute;top:65%;left:10%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white;">
+            <input class="text-2xl font-extrabold" type="button" value="clear" id="clr" size="50" onclick="erase()" style="position:absolute;top:65%;left:15%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white;">
+        </div>
+        <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
+            <div
+              class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+              style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');"
+            ></div>
+          </div>
     </body>
     </html>

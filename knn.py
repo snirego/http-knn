@@ -1,3 +1,4 @@
+from turtle import distance
 import numpy as np
 from sklearn.datasets import load_digits
 import time
@@ -7,7 +8,6 @@ class KNN:
         self.k = k
         self.y_pred = None
         self.k_nearest_neighbours_new = []
-
 
     def calculate_distance_between_two_points(self, point1, point2):
         return np.sqrt(np.sum((point1 - point2) ** 2))
@@ -55,15 +55,19 @@ class KNN:
         #         d[tup[1]] = 1
         # sorted_dict = dict(sorted(d.items(), key=lambda item:item[1]))
         # temp_pred = list(sorted_dict.items())[-1][0]
-
-        for i in range(self.k):
-            m = min(distances_list, key=lambda x: x[0])
-            self.k_nearest_neighbours_new.append(m[1])
-            distances_list.remove(m)
-            # if (i + 1) % self.k == 0:
-            #     print(self.k_nearest_neighbours_new)
         
-        res = max(set(self.k_nearest_neighbours_new), key=self.k_nearest_neighbours_new.count)
+        if len(distances_list) != 0:
+            for i in range(self.k):
+                m = min(distances_list, key=lambda x: x[0])
+                self.k_nearest_neighbours_new.append(m[1])
+                distances_list.remove(m)
+                # if (i + 1) % self.k == 0:
+                #     print(self.k_nearest_neighbours_new)
+            
+            res = max(set(self.k_nearest_neighbours_new), key=self.k_nearest_neighbours_new.count)
+        
+        else:
+            res = None
         
         self.k_nearest_neighbours_new = []
 
@@ -91,29 +95,29 @@ class KNN:
         except Exception as e:
             print(f'Exeption in accuracy --->', e)
 
-knn = KNN(3)
+# knn = KNN(3)
 
-digits = load_digits()
+# digits = load_digits()
 
-X = digits.data
-Y = digits.target
+# X = digits.data
+# Y = digits.target
 
-x_train = X[:1400]
-y_train = Y[:1400]
-x_test = X[1400:]
-y_test = Y[1400:]
+# x_train = X[:1400]
+# y_train = Y[:1400]
+# x_test = X[1400:]
+# y_test = Y[1400:]
 
-time_start = time.perf_counter()
+# time_start = time.perf_counter()
 
-knn.fit(x_train, y_train)
+# knn.fit(x_train, y_train)
 
-knn.predict(x_test)
+# knn.predict(x_test)
 
-# print('Prediction --->', knn.predict(x_test))
-# print('Actual --->', y_test)
+# # print('Prediction --->', knn.predict(x_test))
+# # print('Actual --->', y_test)
 
-time_end = time.perf_counter()
+# time_end = time.perf_counter()
 
-print("Time to fit the model: {}".format(time_end - time_start))
+# print("Time to fit the model: {}".format(time_end - time_start))
 
-print("Accuracy: {}".format(knn.accuracy(y_test)))
+# print("Accuracy: {}".format(knn.accuracy(y_test)))
