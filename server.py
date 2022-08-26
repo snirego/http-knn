@@ -59,7 +59,7 @@ def signin():
     return render_template('signin.html')
 
 
-@app.route('/output', methods=['POST'])
+@app.route('/output', methods=['GET', 'POST'])
 def output():
     try:
         data = request.get_json()
@@ -146,6 +146,8 @@ def output():
         prediction = knn.predict(resized.reshape(1, -1))
         
         print('Our KNN Prediction --->', prediction)
+
+        # return render_template('index.html')
 
         return render_template('draw.html', response=str(prediction), success=True)
 

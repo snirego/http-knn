@@ -1,0 +1,202 @@
+<html>
+    <head>
+        <title>Draw</title>
+        <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+        />
+        <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet"
+        />
+        <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1"
+        />
+        <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        </style>
+    </head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        
+    var canvas, ctx, flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
+
+
+    var x = "white",
+        y = 50;
+    
+    function init() {
+        canvas = document.getElementById('can');
+        ctx = canvas.getContext("2d");
+        w = canvas.width;
+        h = canvas.height;
+        
+        canvas.style.backgroundColor = "#000000";
+
+        canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e)
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false);
+    }
+    
+    function color(obj) {
+        switch (obj.id) {
+            case "green":
+                x = "green";
+                break;
+            case "blue":
+                x = "blue";
+                break;
+            case "red":
+                x = "red";
+                break;
+            case "yellow":
+                x = "yellow";
+                break;
+            case "orange":
+                x = "orange";
+                break;
+            case "black":
+                x = "black";
+                break;
+            case "white":
+                x = "white";
+                break;
+        }
+    }
+    
+    function draw() {
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = x;
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+    }
+    
+    function erase() {
+        ctx.clearRect(0, 0, w, h);
+        document.getElementById("canvasimg").style.display = "none";
+    }
+    
+    function save() {
+        document.getElementById("canvasimg").style.border = "2px solid";
+        var dataURL = canvas.toDataURL();
+        document.getElementById("canvasimg").src = dataURL;
+        document.getElementById("canvasimg").style.display = "inline";
+
+        const img = document.getElementById("canvasimg").src
+        console.log(img)
+
+        var postData = { img_base64: img }
+
+    
+        $.ajax({
+        url: "/output",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(postData),
+        success: function(data){/* do something */}
+        });
+
+        $.ajax({ GET: "/pred",
+            success: function(data){/* do something */}
+        });
+
+        erase();
+
+    }
+    
+    function findxy(res, e) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
+    
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                ctx.fillStyle = x;
+                ctx.fillRect(currX, currY, 2, 2);
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
+    }
+    </script>
+    <body onload="init()" class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
+        
+        <!-- {% if response %}
+            {% if success %}
+                <p class="alert alert-success m-4 text-center">Prediction Result : {{ response }}</p>
+            {% else %}
+                <p class="alert alert-success m-4 text-center">{{ response }}</p>
+            {% endif %}
+        {% endif %} -->
+
+        <div class="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+            <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>            
+            <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
+            
+            <form action="/output" method="POST" enctype = "multipart/form-data">
+                <input 
+                    class="text-2xl font-extrabold" 
+                    type="button" 
+                    value="save" 
+                    id="btn" 
+                    size="50" 
+                    onclick="save()" 
+                    style="position:absolute;top:65%;left:10%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white; border-radius: 5px;"
+                >
+                
+                <input 
+                    class="text-2xl font-extrabold" 
+                    type="button" 
+                    value="clear" 
+                    id="clr" 
+                    size="50" 
+                    onclick="erase()" 
+                    style="position:absolute;top:65%;left:15%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white; border-radius: 5px;"
+                >
+            </form>
+        </div>
+        <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
+            <div
+              class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+              style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');"
+            ></div>
+          </div>
+    </body>
+    </html>
