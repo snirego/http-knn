@@ -117,6 +117,10 @@
         success: function(data){/* do something */}
         });
 
+        $.ajax({ GET: "/pred",
+            success: function(data){/* do something */}
+        });
+
         erase();
 
     }
@@ -153,12 +157,40 @@
     }
     </script>
     <body onload="init()" class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-        <div class="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+        
+        <!-- {% if response %}
+            {% if success %}
+                <p class="alert alert-success m-4 text-center">Prediction Result : {{ response }}</p>
+            {% else %}
+                <p class="alert alert-success m-4 text-center">{{ response }}</p>
+            {% endif %}
+        {% endif %} -->
 
+        <div class="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
             <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>            
             <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
-            <input class="text-2xl font-extrabold" type="button" value="save" id="btn" size="50" onclick="save()" style="position:absolute;top:65%;left:10%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white;">
-            <input class="text-2xl font-extrabold" type="button" value="clear" id="clr" size="50" onclick="erase()" style="position:absolute;top:65%;left:15%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white;">
+            
+            <form action="/output" method="POST" enctype = "multipart/form-data">
+                <input 
+                    class="text-2xl font-extrabold" 
+                    type="button" 
+                    value="save" 
+                    id="btn" 
+                    size="50" 
+                    onclick="save()" 
+                    style="position:absolute;top:65%;left:10%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white; border-radius: 5px;"
+                >
+                
+                <input 
+                    class="text-2xl font-extrabold" 
+                    type="button" 
+                    value="clear" 
+                    id="clr" 
+                    size="50" 
+                    onclick="erase()" 
+                    style="position:absolute;top:65%;left:15%; margin-left: 125px; font-size: 20; padding: 10px; background-color: rgb(102,126,234); color: white; border-radius: 5px;"
+                >
+            </form>
         </div>
         <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
             <div
