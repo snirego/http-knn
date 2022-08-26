@@ -56,8 +56,7 @@ class KNN:
                 # print('Type i --->', type(i))
                 # print(f'i --->', i)
                 knn_list.append(i)
-            # print(f'k_nearest_neighbours_new ---< 2 >--- --->', self.k_nearest_neighbours_new)
-            print(f'knn_list --->', knn_list)
+
             res = max(set(knn_list), key=knn_list.count)
         
         else:
