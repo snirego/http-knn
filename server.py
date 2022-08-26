@@ -154,10 +154,8 @@ def output():
 
 
         # return render_template('pred.html', pred=knn.predict(resized.reshape(1, -1)))
-        print(request.method)
-        print(request.form)
         return render_template('draw.html', response=str(prediction), success=True)
-        
+
     except Exception as e:
         print(e)
         return render_template('draw.html', response=str(prediction), success=False)
@@ -177,5 +175,5 @@ if __name__ == "__main__":
             st.close()
         return IP
     print(extract_ip())
-    app.run(host="127.0.0.1")
-    # app.run(host=f"{extract_ip()}")
+    # app.run(host="127.0.0.1")
+    app.run(host=f"{extract_ip()}")
