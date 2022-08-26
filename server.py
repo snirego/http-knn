@@ -8,20 +8,19 @@ from knn import KNN
 import cv2
 import numpy as np
 import json
-import io
-import os
+
 
 app = Flask(__name__)
 
-prediction = 0
+prediction = [None]
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def home():
     return render_template("index.html")
 
 @app.route("/draw", methods=['GET', 'POST'])
 def draw():
-    return render_template("draw.html")
+    return render_template("draw.html", response=prediction[0])
 
 
 @app.route('/form_signup', methods = ['GET','POST'])
@@ -146,14 +145,14 @@ def output():
         prediction = knn.predict(resized.reshape(1, -1))
         
         print('Our KNN Prediction --->', prediction)
-
-        # return render_template('index.html')
-
-        return render_template('draw.html', response=str(prediction), success=True)
+        
+        if prediction[0] == None:
+            return render_template('draw.html', response="No Prediction")
+        return render_template('draw.html', response=str(prediction[0]), success=True)
 
     except Exception as e:
         print(e)
-        return render_template('draw.html', response=str(prediction), success=False)
+        return render_template('draw.html', response=str(prediction[0]), success=False)
 
 
 if __name__ == "__main__":

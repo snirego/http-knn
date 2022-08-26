@@ -73,7 +73,7 @@ class KNN:
             y.append(self.__predict_one(x))
 
         self.y_pred = y
-
+        
         return y
 
 
