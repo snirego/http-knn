@@ -3,7 +3,6 @@ from flask import Flask, render_template
 import base64
 from flask import Flask, render_template, request
 from sklearn.datasets import load_digits
-from keras.datasets import mnist
 
 from knn import KNN
 import cv2
@@ -84,15 +83,19 @@ def output():
 
 
         # Resize the image to 8x8 pixels like the sklearn.load_digits dataset
+        # Used for the old dataset - if you want to use the old dataset, remove the comment from the line below
         # resized = cv2.resize(invert_two, (8,8), interpolation = cv2.INTER_AREA)
         
-        # Resize the image to 20x20 pixels like the dataset
+        # Resize the image to 20x20 pixels like the new dataset
         resized = cv2.resize(invert_two, (20,20), interpolation = cv2.INTER_AREA)
         resized = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)    
         cv2.imwrite('resized_image.png', resized)
 
 
     # region Old code - sklearn.load_digits dataset
+        # ----------------------------------------------------------------------------
+        # OLD DATASET - sklearn.load_digits dataset - 8x8 pixels
+        # ----------------------------------------------------------------------------
         # # Start KNN Prediction
         # knn = KNN(3)
 
@@ -109,7 +112,7 @@ def output():
     # endregion
 
         # ----------------------------------------------------------------------------
-        # NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW
+        # NEW DATASET - PICTURE OF 5000 IMAGES (20x20) - digits.png
         # ----------------------------------------------------------------------------
         # Read the image
         data_image = cv2.imread('digits.png')
@@ -117,43 +120,33 @@ def output():
         # gray scale conversion
         gray_img = cv2.cvtColor(data_image, cv2.COLOR_BGR2GRAY)
         
-        # We will divide the image
-        # into 5000 small dimensions 
-        # of size 20x20
+        # We will divide the image into 5000 small dimensions of size 20x20
         divisions = list(np.hsplit(i,100) for i in np.vsplit(gray_img,50))
         
-        # Convert into Numpy array
-        # of size (50,100,20,20)
+        # Convert into Numpy array of size (50,100,20,20)
         NP_array = np.array(divisions)
         
-        # Preparing train_data
-        # and test_data.
-        # Size will be (2500,20x20)
+        # Preparing train_data and test_data
         x_train = NP_array[:,:50].reshape(-1,400).astype(np.float32)
         
         # Size will be (2500,20x20)
         x_test = NP_array[:,50:100].reshape(-1,400).astype(np.float32)
         
-        # Create 10 different labels 
-        # for each type of digit
+        # Create 10 different labels for each type of digit
         k = np.arange(10)
         y_train = np.repeat(k,250)[:,np.newaxis]
         y_test = np.repeat(k,250)[:,np.newaxis]
         
-        # Initiate kNN classifier
+        # Initiate KNN classifier
         knn = KNN(3)
         
-        # Train the classifier
         knn.fit(x_train, y_train)
         
         global prediction
         prediction = knn.predict(resized.reshape(1, -1))
         
         print('Our KNN Prediction --->', prediction)
-        # ----------------------------------------------------------------------------
 
-
-        # return render_template('pred.html', pred=knn.predict(resized.reshape(1, -1)))
         return render_template('draw.html', response=str(prediction), success=True)
 
     except Exception as e:
